@@ -1,0 +1,24 @@
+{
+  "name": "index-generator-cli",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/laubernal/index-generator-cli.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bin": {
+    "index-generator": "./dist/index-generator.js"
+  },
+  "bugs": {
+    "url": "https://github.com/laubernal/index-generator-cli/issues"
+  },
+  "homepage": "https://github.com/laubernal/index-generator-cli#readme",
+  "dependencies": {}
+}
