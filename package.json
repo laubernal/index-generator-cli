@@ -20,5 +20,7 @@
     "url": "https://github.com/laubernal/index-generator-cli/issues"
   },
   "homepage": "https://github.com/laubernal/index-generator-cli#readme",
-  "dependencies": {}
+  "dependencies": {
+    "@types/node": "^16.9.4"
+  }
 }
