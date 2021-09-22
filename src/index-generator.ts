@@ -8,40 +8,56 @@ console.log('hi there');
 
 // Obtain current path
 const currentPath = cwd();
-console.log('current path', currentPath);
+console.log('Current path', currentPath);
 
-fs.readdir(currentPath, async (err, filenames) => {
-  if (err) {
-    console.log(err);
+const filenames = fs.readdirSync(currentPath);
+console.log('filenames:', filenames);
+
+const traverseDF = (fn: any) => {
+  while (filenames.length) {
+    const file = filenames.shift();
+
+    const filePath = `${currentPath}/${file}`;
+
+    const stats = fs.lstatSync(filePath);
+
+    if (stats.isDirectory()) {
+      filenames.unshift(...fs.readdirSync(filePath));
+      continue;
+    }
+
+    fn(file);
   }
+};
 
-  const statPromises = filenames.map(filename => {
-    return fs.lstat(path.join(currentPath, filename));
-  });
+traverseDF(console.log);
 
-  const allStats = await Promise.all(statPromises);
+// fs.readdir(currentPath, async (err, filenames) => {
+//   if (err) {
+//     console.log(err);
+//   }
 
-  for (let stats of allStats) {
-    const index = allStats.indexOf(stats);
+//   const statPromises = filenames.map(filename => {
+//     return fs.lstat(path.join(currentPath, filename));
+//   });
 
-    if (stats.isFile()) {}
-  }
-});
+//   const allStats = await Promise.all(statPromises);
+
+//   for (let stats of allStats) {
+//     const index = allStats.indexOf(stats);
+
+//     if (stats.isFile()) {}
+//   }
+// });
 
 // Check if it's a dir or a file
-fs.lstat(currentPath, (err, stats) => {});
+// fs.lstat(currentPath, (err, stats) => {});
 
 // Implement DFS algorithm
 // Create a node class that through the constructor accepts an argument that gets assigned to the data property
 // and initialize an empty array for storing children. Methods add and remove --- add [export * from 'path']
-class TreeNode {
-  constructor(private data: any) {}
-}
 
 // Create a tree class that the constructor initializes a root property to null. Method 'traverseDF' should
 // accept a function that gets called with each element in the tree
-class Tree {
-  constructor() {}
-}
 
 // Implement writeFile
