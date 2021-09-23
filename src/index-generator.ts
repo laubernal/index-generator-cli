@@ -10,8 +10,10 @@ const currentPath = cwd();
 const filenames = fs.readdirSync(currentPath);
 console.log('filenames:', filenames);
 
+const pathMap: { [key: string]: string[] } = {};
+
 const traverseDF = (fn: any) => {
-  while (filenames.length) { 
+  while (filenames.length) {
     // Check if there is an index.ts file inside the directory
     // const indexFile = filenames.find((filename: string) => {
     //   return filename === 'index.ts';
@@ -21,45 +23,62 @@ const traverseDF = (fn: any) => {
     const file = filenames.shift();
     console.log('File:', file);
 
-    const filePath = `${currentPath}\\${file}`;
-    // console.log('File Path: ', filePath);
-
-    // Obtain the stats of the file
-    const stats = fs.lstatSync(filePath);
-
-    // Check if it is a directory
-    if (stats.isDirectory()) {
-      // Insert all files of the directoy at the beginning of the array
-      filenames.unshift(...fs.readdirSync(filePath));
-      continue;
-    }
-
-    console.log(filenames);
-
-    // It is a file -> write "export * from 'file'" inside the index.ts file
     // Check if file is not undefined
     if (file) {
-      const filenamesToExport = filenames.map(filename => {
-        return filename.split('.ts');
-      });
-      console.log('Filenames to export:', filenamesToExport);
+      const filePath = `${currentPath}\\${file}`;
+      // console.log('File Path: ', filePath);
 
-      const data = `\nexport * from './${filenamesToExport[0]}';`;
-      console.log('Data:', data);
+      // Obtain the stats of the file
+      const stats = fs.lstatSync(filePath);
 
-      fs.appendFileSync('index.ts', data, 'utf-8');
+      // Check if it is a directory
+      if (stats.isDirectory()) {
+        // Insert all files of the directoy at the beginning of the array
+        filenames.unshift(...fs.readdirSync(filePath));
+        continue;
+      }
+
+      // It is a file
+      // Save in the object the path of the file as a key and the filename as a value in an array
+      pathMap[currentPath] = [...pathMap[currentPath], file];
+
+      console.log(filenames);
+
+      // It is a file -> write "export * from 'file'" inside the index.ts file
+      // Check if file is not undefined
+      if (file) {
+        const filenamesToExport = filenames.map(filename => {
+          return filename.split('.ts');
+        });
+        console.log('Filenames to export:', filenamesToExport);
+
+        const data = `\nexport * from './${filenamesToExport[0]}';`;
+        console.log('Data:', data);
+
+        fs.appendFileSync('index.ts', data, 'utf-8');
+      }
+      // There is no index.ts file, we have to create it
+      // else {
+      //   const data = `\nexport * from './${filenames}'`
+      //   fs.writeFileSync('index.ts', data, 'utf-8');
+      // }
+
+      fn(file);
     }
-    // There is no index.ts file, we have to create it
-    // else {
-    //   const data = `\nexport * from './${filenames}'`
-    //   fs.writeFileSync('index.ts', data, 'utf-8');
-    // }
-
-    fn(file);
   }
 };
 
 traverseDF(console.log);
+
+// Create an empty array ✔
+// Read directory and fill in the array ✔
+// Shift the first element of the array and check if it is a file or a directory ✔
+// If the element is a file push it at the end of the array ✔
+// Save in an object the path (./src, ./src/A) as the key, and in an array the filenames
+// If the element is a directory check if exists a key with its path, if not create it. Unshift the children of the
+// directory
+// Once the object with the corresponding paths keys and filenames is finished check if in each key exists an index.ts
+// file and if not create it with the corresponding exports of the ts files
 
 // fs.readdir(currentPath, async (err, filenames) => {
 //   if (err) {
@@ -78,18 +97,3 @@ traverseDF(console.log);
 //     if (stats.isFile()) {}
 //   }
 // });
-
-// Check if it's a dir or a file
-// fs.lstat(currentPath, (err, stats) => {});
-
-// Implement DFS algorithm
-// Create a node class that through the constructor accepts an argument that gets assigned to the data property
-// and initialize an empty array for storing children. Methods add and remove --- add [export * from 'path']
-
-// Create a tree class that the constructor initializes a root property to null. Method 'traverseDF' should
-// accept a function that gets called with each element in the tree
-
-// Implement writeFile
-
-
-//
