@@ -4,7 +4,19 @@ import * as fs from 'fs';
 import { cwd } from 'process';
 import path from 'path';
 
+const INDEX_FILE: string = 'index';
+const DEFAULT_EXTENSION: string = '.ts';
+const DATA: string = 'export * from \'./';
+
 const commandPath = cwd();
+
+let fileExtension: string;
+
+if (typeof process.argv.slice(2)[0] === 'undefined') {
+  fileExtension = DEFAULT_EXTENSION;
+} else {
+  fileExtension = process.argv.slice(2)[0];
+}
 
 class DirectoryNode {
   public children: Array<DirectoryNode> = [];
@@ -29,9 +41,9 @@ function buildDirectory(sourcePath: string) {
 
       const filesToExport = descendants
         .filter(filename => {
-          return path.extname(filename) === '.ts' && filename != 'index.ts';
+          return path.extname(filename) === fileExtension && filename != INDEX_FILE.concat(fileExtension);
         })
-        .map(filename => `export * from './${filename.replace(`.ts`, '')}';`)
+        .map(filename => `${DATA}${filename.replace(`${fileExtension}`, '')}';`)
         .join('\n');
 
       fs.writeFileSync(`${currentElement.path}\\index.ts`, filesToExport);
