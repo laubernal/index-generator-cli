@@ -6,7 +6,7 @@ import path from 'path';
 
 const INDEX_FILE: string = 'index';
 const DEFAULT_EXTENSION: string = '.ts';
-const DATA: string = 'export * from \'./';
+const DATA: string = "export * from './";
 
 const commandPath = cwd();
 
@@ -39,14 +39,7 @@ function buildDirectory(sourcePath: string) {
       // Get all elements from the current element
       const descendants = fs.readdirSync(currentElement.path);
 
-      const filesToExport = descendants
-        .filter(filename => {
-          return path.extname(filename) === fileExtension && filename != INDEX_FILE.concat(fileExtension);
-        })
-        .map(filename => `${DATA}${filename.replace(`${fileExtension}`, '')}';`)
-        .join('\n');
-
-      fs.writeFileSync(`${currentElement.path}\\index.ts`, filesToExport);
+      writeIndexFile(descendants, currentElement.path);
 
       for (let descendant of descendants) {
         // Get the path of each element
@@ -65,6 +58,19 @@ function buildDirectory(sourcePath: string) {
   }
 
   return source;
+}
+
+function writeIndexFile(descendants: string[], filePath: string): void {
+  const filesToExport = descendants
+    .filter(filename => {
+      return (
+        path.extname(filename) === fileExtension && filename != INDEX_FILE.concat(fileExtension)
+      );
+    })
+    .map(filename => `${DATA}${filename.replace(`${fileExtension}`, '')}';`)
+    .join('\n');
+
+  fs.writeFileSync(`${filePath}\\index.ts`, filesToExport);
 }
 
 const directoryNode = buildDirectory(commandPath);
