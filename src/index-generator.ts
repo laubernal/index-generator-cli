@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 import { Command } from 'commander';
+import chalk from 'chalk';
 
 import { DEFAULT_EXTENSION } from './constants';
 import { DirectoryTree } from './DirectoryTree';
@@ -20,6 +21,5 @@ const options = program.opts();
 if (options.generate) {
   const directoryNode = new DirectoryTree();
   directoryNode.buildDirectoryTree(directoryNode.getCommandPath());
-  // console.log(JSON.stringify(directoryNode, null, 2));
-  console.log('Index files created successfully');
+  console.log(chalk.green('✔ Index files created successfully'));
 }
