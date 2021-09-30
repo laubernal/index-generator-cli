@@ -18,8 +18,6 @@ program
 
 const options = program.opts();
 
-if (options.generate) {
-  const directoryNode = new DirectoryTree();
-  directoryNode.buildDirectoryTree(directoryNode.getCommandPath());
-  console.log(chalk.green('✔ Index files created successfully'));
-}
+const directoryNode = new DirectoryTree();
+directoryNode.build(directoryNode.getCommandPath(), options.generate);
+console.log(chalk.green('✔ Index files created successfully'));
