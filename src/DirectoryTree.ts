@@ -6,11 +6,11 @@ import { DirectoryNode } from './DirectoryNode';
 import { DATA, DEFAULT_EXTENSION, INDEX_FILE } from './constants';
 
 export class DirectoryTree {
-  public getCommandPath() {
+  public getCommandPath():string {
     return cwd();
   }
 
-  public buildDirectoryTree(sourcePath: string) {
+  public buildDirectoryTree(sourcePath: string): DirectoryNode {
     const source = new DirectoryNode(sourcePath);
 
     const stack = [source];

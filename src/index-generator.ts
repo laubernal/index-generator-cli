@@ -5,7 +5,7 @@ import { Command } from 'commander';
 import { DEFAULT_EXTENSION } from './constants';
 import { DirectoryTree } from './DirectoryTree';
 
-const program = new Command();
+const program: Command = new Command();
 
 program
   .option(
